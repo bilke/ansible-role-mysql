@@ -1,0 +1,12 @@
+---
+- name: Install python mysql bindings
+  package: name=python-mysqldb state=installed
+
+- name: Ensure proper Craft CMS mysql config
+  blockinfile:
+    dest: "{{ mysql_config_file }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - Craft CMS config"
+    insertafter: "\\[mysqld\\]"
+    block: |
+      sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+  notify: restart mysql
